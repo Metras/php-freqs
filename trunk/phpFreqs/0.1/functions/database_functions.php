@@ -32,14 +32,65 @@ function dbcheck()
 	 //Trap error connecting to DB
 	 die('Could not connect: ' . mysql_error());
 	}
+	$test_db=mysql_select_db($config_db_database,$db_link);
 	
-	
-	$test_Db=mysql_select_db($config_db_database,$db_link);
-  if (!test_db)
+  if (!$test_db)
   {
-    die('Could not select DB<br><br>'.mysql_error());
+    if (mysql_errno() == "1049")
+    {
+      //Database not found, try creating.
+      $sql="create database $config_db_database;";
+      $makeit=mysql_query($sql,$db_link);
+      if (!$makeit)
+      {
+        die('No Database Found, Could not Create one.<br>');
+      }
+      else
+      {
+        $test_db=mysql_select_db($config_db_database,$db_link);
+        if (!test_db)
+        {
+          die('Fatal Error: Database Selection after Creation.<br>');
+        }
+      }
+    }
+    else
+    {
+      echo 'Could not select DB<br><br>'.mysql_error().'<br>'.mysql_errno();
+    }  
   }
+  return($db_link);
+} 
+
+function dbinstalled($db)
+{
+  //Verify if system is installed
+  $sql='select version from installed;';
+  $check=@mysql_query($sql,$db);
+  
+  if (!$check)
+  {
+    if (mysql_errno() == "1146")
+    {
+      echo "Table Doesn't Exist!<br>";
+      return(false);
+    }
+    else
+    {
+      die('Fatal Error: Install Version unverifiable<br>'.mysql_errno());
+    }  
+  }
+  else
+  {
+    return(true);
+  }
+}
+
+function doinstall($db)
+{
+  //Create tables in DB
+  
+}
+
 	
-	return($db_link);
-} 	
 ?>
