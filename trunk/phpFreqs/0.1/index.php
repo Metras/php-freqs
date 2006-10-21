@@ -15,8 +15,10 @@
   
   //DB Check, get our db link
   $db=dbcheck();
+  //**Need to update this, instead of dieing in the function, it should return false and be delt with.
   
   
+  //Now you can pass $db to any function that requires DB access.  
     
   /*  Test for Installation Complete  */
   $installed=dbinstalled($db);
