@@ -17,11 +17,15 @@
   $db=dbcheck();
   
   
-  /*  Test for tables, no tables means run installation routine  */
+    
+  /*  Test for Installation Complete  */
+  $installed=dbinstalled($db);
+  if (!$installed)
+  {
+    doinstall($db);
+  }
 
-?> 
-
-
+?>
 <html>
 	<head>
 	 <title>phpFreqs</title>
