@@ -1,6 +1,12 @@
 <?php
 	
 	//Index Page
+	//Right off the bat, lets determine where we live
+	
+	$maindir=$_SERVER["SCRIPT_FILENAME"];
+  $lastslash=strrpos($maindir,"/");
+  $maindir=substr($maindir,0,$lastslash+1);
+  unset($lastslash);
 	
   //Load Config settings
   require_once('config.php');
@@ -26,6 +32,8 @@
   {
     doinstall($db);
   }
+
+  load_locations($db);
 
 ?>
 <html>

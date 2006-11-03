@@ -99,16 +99,16 @@ function doinstall($db)
   $state='CREATE TABLE state (id int, name varchar(75), country int)';
   $city='CREATE TABLE city (id int, name varchar(75), state int)';
   
-  install_create_tables($users, $db);
-  install_create_tables($options, $db);
-  install_create_tables($freq, $db);
-  install_create_tables($tags, $db);
-  install_create_tables($cat, $db);
-  install_create_tables($com_freq, $db);
-  install_create_tables($com_loc, $db);
-  install_create_tables($country, $db);
-  install_create_tables($state, $db);
-  install_create_tables($city, $db);
+  send_sql($users, $db);
+  send_sql($options, $db);
+  send_sql($freq, $db);
+  send_sql($tags, $db);
+  send_sql($cat, $db);
+  send_sql($com_freq, $db);
+  send_sql($com_loc, $db);
+  send_sql($country, $db);
+  send_sql($state, $db);
+  send_sql($city, $db);
   //Not sure if there is a more effecient way to do above, but it works ;)
 
   //If we are still alive, then installation must have been successful
@@ -116,13 +116,95 @@ function doinstall($db)
 
 }
 
-function install_create_tables($sql, $db)
+function send_sql($sql, $db)
 {
   $result=mysql_query($sql,$db);
   if (!$result)
   {
-    die('Oops.. something went wrong '.mysql_error().'<br>');
+    die('Oops.. something went wrong<br>'.$sql.'<br>'.mysql_error().'<br>');
+  }
+  return($result);
+}
+
+function load_locations($db)
+{
+  //Lets read in our data to install basic locales.
+  global $maindir;
+  
+  $datadir=$maindir."functions/data/";
+  $readdata=scandir($datadir);  //Read directory
+  
+  //Now strip all non-directory entries
+  $count=0;
+  foreach($readdata as $dirdata)
+  {
+    if (!is_dir($dirdata))
+    { 
+      if (!strpos($dirdata,".",0))
+      {
+        $countries[$count]=$dirdata;
+        $count++;
+      }
+    }
+  }
+  //We should be left with an Array containing our Country folders.
+  
+  foreach($countries as $country)
+  {
+    //Write country to database (If it doesn't exist)
+    $sql="insert into country values('','$country')";
+    /*This needs to be updated.. we should select from database, and upon failure add*/ 
+    send_sql($sql,$db);
+    
+    //Now get our country ID from the database
+    $country_id=mysql_insert_id();    
+    
+    $statesdir=$datadir.$country."/";
+    $readdata=scandir($statesdir);  //Read directory
+    //Now strip all directory entries
+    
+    $count=0;
+    foreach($readdata as $dirdata)
+    {
+      if (!is_dir($dirdata))
+      { 
+        $states[$count]=$dirdata;
+        $count++;
+      }
+    }
+    //At this point we know all states in a country, for each state read in places
+    foreach($states as $state)
+    {
+      $currentfile=$statesdir.$state;
+      
+      //Write state to database (If it doesn't exist)
+      $sql="insert into state values('','$state',$country_id)";
+      /*This needs to be updated.. we should select from database, and upon failure add*/ 
+      send_sql($sql,$db);
+    
+      //Now get our state ID from the database
+      $state_id=mysql_insert_id();
+      
+      $fp=fopen($currentfile,"r");
+      while (!feof($fp)) 
+      {
+        $buffer = trim(fgets($fp, 4096));
+        if ($buffer != "")
+        {
+          $buffer=str_replace("'","\'",$buffer);
+          $sql="insert into city values('','$buffer',$state_id)";
+          send_sql($sql,$db);
+        }
+      }
+      fclose($fp);
+    }
   }
 }
-	
+
+function showme($data)
+{
+  echo "<pre>";
+  var_dump($data);
+  echo "</pre>";
+ }	
 ?>
