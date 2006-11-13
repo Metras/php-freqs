@@ -1,0 +1,66 @@
+/* CSS Document */
+
+body
+{
+  background-color: #FFFFFF;
+  color: #000000;
+  margin-top: 0;
+  /*border: 1px solid red;*/
+}
+
+.logo
+{
+  width: 800px;
+  height: 100px;
+  margin-top: 0;
+  margin-left: 50px;
+  Background-image: url(logo.jpg);
+  /*border: 1px solid green;*/
+  
+}
+
+/*Sidebar width + Content width should = Body set width*/
+
+.sidebar
+{
+
+  width: 200px;
+  position: absolute;
+  top: 120px;
+  left: 10 px;
+  border: 1px solid #ECB162;
+  background-color: #EAF4EB;  
+}
+
+
+.content
+{
+
+  width: 750px;
+  position: absolute;
+  top: 120px;
+  left: 235px;
+  border: 1px solid #ECB162;
+  background-color: #EAF4EB;
+}
+
+.sidebar a:link 
+{
+	text-decoration: none;
+	color: #046ABD;
+}
+.sidebar a:visited 
+{
+	text-decoration: none;
+	color: #046ABD;
+}
+.sidebar a:hover 
+{ 
+	color: #ECB162;
+	text-decoration: underline;
+}
+.sidebar a:active 
+{
+	color: #FF0000;
+	text-decoration: overline underline;
+}

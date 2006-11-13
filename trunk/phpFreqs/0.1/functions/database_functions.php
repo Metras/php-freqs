@@ -112,6 +112,7 @@ function doinstall($db)
   //Not sure if there is a more effecient way to do above, but it works ;)
 
   //If we are still alive, then installation must have been successful
+  load_locations($db);
   return(true);
 
 }
