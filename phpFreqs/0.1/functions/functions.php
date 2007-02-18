@@ -26,8 +26,18 @@ function dosidebar()
   }
   echo '</ul>';
   
-  
-  
+  /*Follow below for this basic idea for consistency.  Title/HR*/
+  echo "Searches<br>";
+  echo '<hr width="50%" align="left">';
+  /*Follow above for this basic idea for consistency.  Title/HR*/
+  echo "<form>";
+  echo "<input type=\"text\" name=\"city\" value=\"City\" size=\"12\">";
+  echo "<input type=\"submit\" value=\"Search\">";
+  echo "</form>";
+  echo "<form>";
+  echo "<input type=\"text\" name=\"freq\" value=\"Freq(147.6275)\" size=\"12\">";
+  echo "<input type=\"submit\" value=\"Search\">";
+  echo "</form>";
   
 }
 
